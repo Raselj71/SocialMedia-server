@@ -16,11 +16,18 @@ datasource db {
 model User{
    id Int @id @default(autoincrement())
    firstName String
-   lastName  String
-   email  String
+   lastName  String?
+   email  String  @unique
    password String
-   bio String 
+   bio String?
    profilePicture String
+   createdAt DateTime @default(now())
    
+
+}
+
+model Post{
+  id Int @id @default(autoincrement())
+  
 
 }
