@@ -22,12 +22,30 @@ model User{
    bio String?
    profilePicture String
    createdAt DateTime @default(now())
-   
+   post Post[]
+   comment Comment[]
 
 }
 
 model Post{
   id Int @id @default(autoincrement())
-  
+  content String
+  mediaUrl String
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+  comment Comment[]
+  updateAt DateTime @default(now())
+  createdAt DateTime @default(now())
+
+}
+
+model Comment{
+  id Int @id @default(autoincrement())
+  content String
+  post Post @relation(fields: [postId], references: [id])
+  postId Int
+
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
 
 }
