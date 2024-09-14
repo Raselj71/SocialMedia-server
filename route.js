@@ -1,7 +1,7 @@
-const express=require('express')
+import express from 'express'
 const route=express.Router()
 
-const userroute=require('./server/user/user.route')
+import userroute from './server/user/user.route.js'
 
 
 
@@ -9,4 +9,4 @@ const userroute=require('./server/user/user.route')
 route.use('/user',userroute)
 
 
-module.exports=route
+export default route
