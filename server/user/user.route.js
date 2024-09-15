@@ -1,13 +1,14 @@
-const express =require('express')
+import express from 'express'
+import { login, signup } from './user.controller.js'
+
+
 
 const route=express.Router()
 
 
-route.get('/all',(req, res)=>{
-
-    res.json({data:"all user are ok"})
-})
+route.post('/login',login)
+route.post('/signup',signup)
 
 
 
-module.exports=route
+export default route
