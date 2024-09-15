@@ -1,7 +1,7 @@
-const multer = require("multer");
-const fs = require("fs");
+import multer from 'multer'
+import fs from 'fs'
 
-module.exports = multer.diskStorage({
+const multerdata= multer.diskStorage({
   filename: (req, file, callback) => {
     const filename =
       Date.now() + Math.floor(Math.random() * 100) + file.originalname.replace(/ /g, "");
@@ -14,3 +14,5 @@ module.exports = multer.diskStorage({
     callback(null, "storage");
   },
 });
+
+export default multerdata
