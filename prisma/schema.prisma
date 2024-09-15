@@ -14,7 +14,9 @@ model User {
   email           String     @unique
   password        String
   bio             String?
-  profilePicture  String
+  profilePicture  String?
+  gender      Gender
+  dateofbirth DateTime
   createdAt       DateTime   @default(now())
   post            Post[]
   comment         Comment[]  @relation("CommentAuthor")
@@ -23,6 +25,12 @@ model User {
   messageSent     Message[]  @relation("SentMessages")
   messageReceive  Message[]  @relation("ReceivedMessages")
   updatedAt       DateTime   @default(now()) @updatedAt
+}
+
+enum Gender{
+  male
+  female
+  custom
 }
 
 model Post {
