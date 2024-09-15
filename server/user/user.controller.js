@@ -1,5 +1,4 @@
 import prisma from "../../db/connectdb.js";
-import bcrypt from "bcrypt";
 
 export const login=async(req,res)=>{
 

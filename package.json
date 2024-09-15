@@ -12,11 +12,6 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^5.19.1",
-<<<<<<< HEAD
-=======
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.3",
->>>>>>> c0cd32ab542c7b763be02d18f88952cedf825837
     "dotenv": "^16.4.5",
     "express": "^4.20.0",
     "multer": "^1.4.5-lts.1",
