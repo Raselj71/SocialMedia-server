@@ -48,7 +48,7 @@ export const signup = async (req, res) => {
     const { firstName, lastName, email, password, gender, dateOfBirth } =
       await req.body;
 
-    const encryptedPassword = await bcyrpt.hash(password, 10);
+    const encryptedPassword = await bcrypt.hash(password, 10);
 
     const existuser = await prisma.user.findUnique({
       where: {
