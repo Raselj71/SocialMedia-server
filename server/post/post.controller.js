@@ -30,7 +30,7 @@ export const addpost=async(req,res)=>{
                 authorId:parseInt(userid),
                 media: {
                     create: files.map((file) => ({
-                      url: `/storage/${file.filename}`, 
+                      url: `${process.env.BASE_URL}/media/${file.filename}`, 
                       type: file.mimetype.startsWith('image') ? 'IMAGE' : 'VIDEO', 
                     })),
                   },
