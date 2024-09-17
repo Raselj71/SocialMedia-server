@@ -2,6 +2,7 @@ import prisma from "../../db/connectdb.js";
 import multer from "multer";
 import path from 'path';
 import multerData from '../../config/mullter.js'
+import 'dotenv/config'
 
 
 const upload=multer({storage:multerData}).array('mediaFiles',20)
@@ -48,5 +49,27 @@ export const addpost=async(req,res)=>{
       }
     
    })
+
+}
+
+export const getall=async(req, res)=>{
+
+  try {
+      const post=await prisma.post.findMany({
+        include:{
+          author:true,
+          media:true
+        }
+      })
+
+
+      console.log(post)
+
+      res.status(200).json({message:"here is all post", post:post})
+  } catch (error) {
+    console.log(error)
+    
+  }
+
 
 }
