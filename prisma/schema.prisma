@@ -14,7 +14,8 @@ model User {
   email           String     @unique
   password        String
   bio             String?
-  
+  profilePicture  Media? @relation("profilePicture") 
+  coverPicture    Media? @relation("coverPicture")
   gender          Gender
   dateofbirth     DateTime
   createdAt       DateTime   @default(now())
@@ -26,14 +27,11 @@ model User {
   messageReceive  Message[]  @relation("ReceivedMessages")
   updatedAt       DateTime   @default(now()) @updatedAt
   
-}
 
-model userProfilePicture{
-      id Int @id @default(autoincrement())
-      type MediaType
-      url String
 
 }
+
+
 
 
 
@@ -61,6 +59,14 @@ model Media{
   type    MediaType
   post    Post @relation(fields: [postId], references: [id])
   postId  Int
+
+  userId Int @unique
+  profilePictureUser User @relation("profilePicture",fields: [userId],references: [id])
+
+  profileUserId Int @unique
+
+  coverPictureUser User @relation("coverPicture",fields: [profileUserId],references: [id])
+  
 
 
 }
