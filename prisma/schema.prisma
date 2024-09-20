@@ -14,8 +14,13 @@ model User {
   email           String     @unique
   password        String
   bio             String?
+<<<<<<< HEAD
   profilePicture  Media? @relation("profilePicture") 
   coverPicture    Media? @relation("coverPicture")
+=======
+  profilePicuture Media?
+
+>>>>>>> 5e62dffa18fde13765e42b3ccbce3471af936746
   gender          Gender
   dateofbirth     DateTime
   createdAt       DateTime   @default(now())
@@ -28,8 +33,11 @@ model User {
   updatedAt       DateTime   @default(now()) @updatedAt
   
 
+<<<<<<< HEAD
 
 }
+=======
+>>>>>>> 5e62dffa18fde13765e42b3ccbce3471af936746
 
 
 
@@ -57,10 +65,11 @@ model Media{
   id      Int @id @default(autoincrement())
   url     String
   type    MediaType
-  post    Post @relation(fields: [postId], references: [id])
-  postId  Int
+  post    Post? @relation(fields: [postId], references: [id])
+  postId  Int?
 
   userId Int @unique
+<<<<<<< HEAD
   profilePictureUser User @relation("profilePicture",fields: [userId],references: [id])
 
   profileUserId Int @unique
@@ -68,7 +77,12 @@ model Media{
   coverPictureUser User @relation("coverPicture",fields: [profileUserId],references: [id])
   
 
+=======
+  user User? @relation(fields: [userId],references: [id],onDelete: Cascade)
+ 
+>>>>>>> 5e62dffa18fde13765e42b3ccbce3471af936746
 
+  
 }
 
 enum MediaType{
