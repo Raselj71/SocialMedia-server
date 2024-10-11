@@ -1,18 +1,23 @@
-import multer from 'multer'
-import fs from 'fs'
+import multer from "multer";
 
-const multerdata= multer.diskStorage({
-  filename: (req, file, callback) => {
-    const filename =
-      Date.now() + Math.floor(Math.random() * 100) + file.originalname.replace(/ /g, "");
-    callback(null, filename);
-  },
-  destination: (req, file, callback) => {
-    if (!fs.existsSync("storage")) {
-      fs.mkdirSync("storage");
-    }
-    callback(null, "storage");
-  },
-});
+const storage = multer.memoryStorage()
 
-export default multerdata
+export default multer(
+    {
+        storage: storage,
+      
+        
+      
+        fileFilter: function (req, file, cb) {
+            const fileRegex = new RegExp('\.(jpg|jpeg|png|mp4)$');
+            const fileName = file.originalname;
+
+            if (!fileName.match(fileRegex)) {
+               
+                return cb(new Error('Invalid file type'));
+            }
+           
+            cb(null, true);
+        }
+    })
+    .array("mediaFiles",20)

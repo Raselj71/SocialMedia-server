@@ -78,3 +78,22 @@ export const signup = async (req, res) => {
      console.log(error)
   }
 };
+
+export const logininfo=async(req,res)=>{
+       try {
+            const user=await prisma.findUnique({
+              where:{
+                 id:parseInt(req.params.id)
+              },
+              
+
+            })
+
+            console.log(user)
+
+            return res.status(200).json({message:id,})
+        
+       } catch (error) {
+        
+       }
+}

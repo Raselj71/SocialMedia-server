@@ -1,15 +1,17 @@
 import prisma from "../../db/connectdb.js";
 import multer from "multer";
-import path from 'path';
-import multerData from '../../config/mullter.js'
+
+
 import 'dotenv/config'
+import {uploadImage} from "../../cloudinarySetup.js";
+import mullter from "../../config/mullter.js";
 
 
-const upload=multer({storage:multerData}).array('mediaFiles',20)
+
 
 export const addpost=async(req,res)=>{
    try {
-    upload(req,res, async function(error) {
+    mullter(req,res, async function(error) {
       if(error){
          console.log(error)
         return res.status(500).json({message:"File upload failed", error:error
@@ -19,6 +21,8 @@ export const addpost=async(req,res)=>{
 
       const {content,userid}=req.body;
       const files=req.files;
+     
+     
 
     
 
@@ -36,16 +40,31 @@ export const addpost=async(req,res)=>{
 
 
       }else{
+           
+        const resultArray = await Promise.all(files.map(async (file) => {
+          const imageStream = file.buffer;
+          const imageName = file.originalname + new Date().getTime().toString();
+          const result = await uploadImage(imageStream, imageName);
+
+          return {
+            url: result.secure_url,
+            type: file.mimetype.startsWith('image') ? 'IMAGE' : 'VIDEO',
+          };
+        }));
+
+      
+             
+        
 
         const newPost=await prisma.post.create({
           data:{
               content:content,
               authorId:parseInt(userid),
-              media: {
-                  create: files.map((file) => ({
-                    url: `${process.env.BASE_URL}/media/${file.filename}`, 
-                    type: file.mimetype.startsWith('image') ? 'IMAGE' : 'VIDEO', 
-                  })),
+               media: {
+                create: resultArray.map((file) => ({
+                  url: file.url,
+                  type: file.type
+                })),
                 },
               
           },
