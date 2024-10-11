@@ -21,6 +21,7 @@ model User {
   createdAt       DateTime   @default(now())
   post            Post[]
   comment         Comment[]  @relation("CommentAuthor")
+  likes           Like[] @relation("UserLikes")
   friends         Friendship[] @relation("UserFriendsA")
   friendOf        Friendship[] @relation("UserFriendsB")
   messageSent     Message[]  @relation("SentMessages")
@@ -48,6 +49,7 @@ model Post {
   author     User     @relation(fields: [authorId], references: [id])
   authorId   Int
   comment    Comment[] @relation("PostComments")
+  likes   Like[] @relation("PostLikes")
   updatedAt  DateTime @default(now()) @updatedAt
   createdAt  DateTime @default(now())
 }
@@ -113,4 +115,15 @@ model Message {
   sentAt     DateTime @default(now())
   sender     User     @relation("SentMessages", fields: [senderId], references: [id])
   receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+}
+
+model Like{
+   id Int @id @default(autoincrement())
+   userId Int
+   postId Int
+   user  User @relation("UserLikes",fields: [userId],references: [id])
+   post  Post @relation("PostLikes",fields: [postId],references: [id])
+   createdAt DateTime @default(now())
+   @@unique([userId,postId])
+
 }
