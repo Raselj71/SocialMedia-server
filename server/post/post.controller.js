@@ -19,7 +19,8 @@ export const addpost=async(req,res)=>{
       }
 
 
-      const {content,userid}=req.body;
+      const {content,userId}=req.body;
+     
       const files=req.files;
      
      
@@ -31,7 +32,7 @@ export const addpost=async(req,res)=>{
          const newPost= await prisma.post.create({
            data:{
             content:content,
-            authorId:parseInt(userid)
+            userId:parseInt(userId)
            }
          })
 
@@ -59,7 +60,7 @@ export const addpost=async(req,res)=>{
         const newPost=await prisma.post.create({
           data:{
               content:content,
-              authorId:parseInt(userid),
+               userId:parseInt(userId),
                media: {
                 create: resultArray.map((file) => ({
                   url: file.url,
@@ -91,8 +92,11 @@ export const getall=async(req, res)=>{
 
   try {
       const post=await prisma.post.findMany({
+        orderBy:{
+           createdAt:'desc'
+        },
         include:{
-          author:{
+          user:{
              select:{
               id:true,
               firstName:true,
@@ -101,8 +105,33 @@ export const getall=async(req, res)=>{
              }
           },
           media:true,
-          comment:true
+          comment: {
+            include: {
+              user: {  
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+              replies: { 
+                include: {
+                  user: {
+                    select: {
+                      id: true,
+                      firstName: true,
+                      lastName: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          
+          likes:true,
+          
         },
+      
         
       })
 
@@ -125,4 +154,76 @@ export const getsingle=async(req, res)=>{
       }
      })
      res.status(200).json({message:"this is single post route"})
+}
+
+export const addcomment=async(req, res)=>{
+
+    try {
+         const{postId,authorId,content,parentId}=req.body
+         if (!content || !postId || !authorId) {
+          return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+         const comment=await prisma.comment.create({
+          data:{
+            content,
+            postId:parseInt(postId),
+            userId:parseInt(authorId),
+            parentId: parentId ? parseInt(parentId) : null
+
+          },
+         
+         })
+
+         res.status(201).json(comment);
+
+
+     
+
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while creating the comment' });
+      
+    }
+
+}
+
+export const addlike=async(req, res)=>{
+
+      try {
+            const{postId,userId}=req.body
+
+            const existingLike=await prisma.like.findFirst({
+              where:{
+                postId:parseInt(postId),
+                userId:parseInt(userId)
+              }
+            })
+
+            if(existingLike){
+                 await prisma.like.delete({
+                   where:{
+                    id:existingLike.id
+                   }
+                 })
+
+                 res.status(200).json({ message: 'Like removed' });
+
+            }else{
+              const newLike = await prisma.like.create({
+                data: {
+                  postId: parseInt(postId),
+                  userId: parseInt(userId),
+                },
+              });
+              res.status(201).json({ message: 'Post liked', like: newLike });
+
+            }
+
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error handling like' });
+      }
+
+
 }

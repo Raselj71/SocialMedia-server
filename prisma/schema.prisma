@@ -46,10 +46,10 @@ model Post {
   id         Int      @id @default(autoincrement())
   content    String
   media      Media[]
-  author     User     @relation(fields: [authorId], references: [id])
-  authorId   Int
+  user     User     @relation(fields: [userId], references: [id])
+  userId   Int
   comment    Comment[] @relation("PostComments")
-  likes   Like[] @relation("PostLikes")
+  likes      Like[] @relation("PostLikes")
   updatedAt  DateTime @default(now()) @updatedAt
   createdAt  DateTime @default(now())
 }
@@ -62,12 +62,12 @@ model Media{
   post    Post? @relation(fields: [postId], references: [id])
   postId  Int?
 
-  userId Int @unique
-  profilePictureUser User @relation("profilePicture",fields: [userId],references: [id])
+  userId Int? @unique
+  profilePictureUser User? @relation("profilePicture",fields: [userId],references: [id])
 
-  profileUserId Int @unique
+  profileUserId Int? @unique
 
-  coverPictureUser User @relation("coverPicture",fields: [profileUserId],references: [id])
+  coverPictureUser User? @relation("coverPicture",fields: [profileUserId],references: [id])
   
 
 
@@ -86,8 +86,8 @@ model Comment {
   content    String
   post       Post      @relation("PostComments", fields: [postId], references: [id])
   postId     Int
-  author     User      @relation("CommentAuthor", fields: [authorId], references: [id])
-  authorId   Int
+  user     User      @relation("CommentAuthor", fields: [userId], references: [id])
+  userId   Int
   updateAt   DateTime  @default(now()) @updatedAt
   createdAt  DateTime  @default(now())
   parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
